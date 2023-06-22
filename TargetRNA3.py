@@ -18,7 +18,7 @@ def command():
                 if (arg == '-h') or (arg == '-help') or (arg == '--help'): printUsage = True
         if (len(sys.argv) < 5) or (printUsage):
                 sys.stderr.write("\nTargetRNA3 version 3.0.1\n")
-                sys.stdout.write("TargetRNA3 identifies targets of a small regulatory RNA\n\n")
+                sys.stdout.write("TargetRNA3 predicts targets of a small regulatory RNA\n\n")
                 sys.stdout.write("Usage: python TargetRNA3.py -s *.fa -g genome_dir [options]\n\n")
                 sys.stdout.write("*****   Required arguments   *****\n\n")
                 sys.stdout.write("\t-s STRING\tFile in FASTA format containing sRNA sequence\n")
@@ -29,10 +29,10 @@ def command():
                 sys.stdout.write("*****   Optional arguments   *****\n\n")
                 sys.stdout.write("\t-o STRING\tFile to which results should be output\n")
                 sys.stdout.write("\t\t\t\t(default is standard out)\n")
-                sys.stdout.write("\t-prob FLOAT\tProbability above which a gene is identified\n")
+                sys.stdout.write("\t-prob FLOAT\tProbability above which a target is predicted\n")
                 sys.stdout.write("\t\t\t\tas a target\n")
                 sys.stdout.write("\t\t\t\t(default is 0.5)\n")
-                sys.stdout.write("\t-pval FLOAT\tP-value below which a gene is identified\n")
+                sys.stdout.write("\t-pval FLOAT\tP-value below which a target is predicted\n")
                 sys.stdout.write("\t\t\t\tas a target\n")
                 sys.stdout.write("\t\t\t\t(default is 0.05)\n")
                 sys.stdout.write("\t-n_threads INT\tnumber of threads\n")
@@ -480,7 +480,7 @@ if __name__ == "__main__":
 
         if (OUTPUT_FILE != '') and (len(df_output) > 0):
                 df_output.to_csv(OUTPUT_FILE, sep='\t', index_label="Index")
-                sys.stderr.write('\nTargetRNA3 identified ' + str(len(df_output)) + ' targets, which it wrote to the output file ' + OUTPUT_FILE + '\n\n')
+                sys.stderr.write('\nTargetRNA3 predicted ' + str(len(df_output)) + ' targets, which it wrote to the output file ' + OUTPUT_FILE + '\n\n')
         elif (OUTPUT_FILE == '') and (len(df_output) > 0): sys.stdout.write('\n' + df_output.to_string() + '\n\n')
-        else: sys.stderr.write('\nTargetRNA3 did not find any significant targets. To increase the sensitivity and identify more targets, try lowering the probability threshold.\n\n')
+        else: sys.stderr.write('\nTargetRNA3 did not find any significant targets. To increase the sensitivity and predict more targets, try lowering the probability threshold.\n\n')
 
