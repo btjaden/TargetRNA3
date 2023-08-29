@@ -380,8 +380,9 @@ def predictions(X):
 
 def compute_pvalues(y_pred_proba):
         pvalues = np.zeros(len(y_pred_proba))
-        mean, stdev = np.mean(y_pred_proba), np.std(y_pred_proba)
-        for i in range(len(y_pred_proba)): pvalues[i] = 1.0 - stats.norm.cdf(y_pred_proba[i], mean, stdev)
+        params = stats.lognorm.fit(y_pred_proba)
+        arg, loc, scale = params[:-2], params[-2], params[-1]
+        for i in range(len(y_pred_proba)): pvalues[i] = 1.0 - stats.lognorm.cdf(y_pred_proba[i], loc=loc, scale=scale, *arg)
         return pvalues
 
 
