@@ -483,5 +483,5 @@ if __name__ == "__main__":
                 df_output.to_csv(OUTPUT_FILE, sep='\t', index_label="Index")
                 sys.stderr.write('\nTargetRNA3 predicted ' + str(len(df_output)) + ' targets, which it wrote to the output file ' + OUTPUT_FILE + '\n\n')
         elif (OUTPUT_FILE == '') and (len(df_output) > 0): sys.stdout.write('\n' + df_output.to_string() + '\n\n')
-        else: sys.stderr.write('\nTargetRNA3 did not find any significant targets. To increase the sensitivity and predict more targets, try lowering the probability threshold.\n\n')
+        else: sys.stderr.write('\nTargetRNA3 did not find any significant targets. To increase the sensitivity and predict more targets, try lowering the probability threshold. To see all target predictions, use a probability of 0 and a p-value of 1.\n\n')
 
