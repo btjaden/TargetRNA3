@@ -299,7 +299,7 @@ def get_homologs(GENOME_DIR, SRNA_FILENAME, genome, genes):
 def determine_sRNA_accessibility(GENOME_DIR, sRNA_name, sRNA_sequence):
         TIME_STR = str(time.time())
         WINDOW_SIZE = min(70, len(sRNA_sequence))
-        p = subprocess.run(['nice', './RNAplfold', '-u', '40', '-O', '--plex_output', '-W', str(WINDOW_SIZE), '--auto-id', '--id-prefix', TIME_STR], input=sRNA_sequence.encode(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.run(['nice', 'RNAplfold', '-u', '40', '-O', '--plex_output', '-W', str(WINDOW_SIZE), '--auto-id', '--id-prefix', TIME_STR], input=sRNA_sequence.encode(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if (p.returncode != 0) or (len(p.stderr.decode()) > 0):
                 sys.stderr.write('ERROR executing RNAplfold:\t' + str(p.stderr.decode()) + '\n')
         p = subprocess.run(['RNAplex', '-a', '.', '-k'], input=sRNA_sequence.encode(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -313,7 +313,7 @@ def determine_sRNA_accessibility(GENOME_DIR, sRNA_name, sRNA_sequence):
 
 # HELPER FUNCTION FOR COMPUTING INTERACTION ENERGIES. COMPUTES ENERGIES USING RNAPLEX.
 def run_RNAplex(GENOME_DIR, SRNA_FILENAME, f):
-        p = subprocess.run(['nice', './RNAplex', '-f', '0', '-q', SRNA_FILENAME, '-t', GENOME_DIR + RNAPLFOLD_DIR + f, '-a', GENOME_DIR + RNAPLFOLD_DIR, '-b'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.run(['nice', 'RNAplex', '-f', '0', '-q', SRNA_FILENAME, '-t', GENOME_DIR + RNAPLFOLD_DIR + f, '-a', GENOME_DIR + RNAPLFOLD_DIR, '-b'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         structure_info = p.stdout.decode().strip().split('\n')[2]
         return (f, structure_info)
 
