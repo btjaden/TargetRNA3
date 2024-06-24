@@ -210,7 +210,7 @@ def determine_closest_relatives(GENOME_DIR):
         seq_16S = get_16S_sequence(GENOME_DIR)
         with open(TEMP_FILENAME1, 'w') as out_file:
                 out_file.write('>16S' + '\n' + seq_16S + '\n')
-        p = subprocess.run(['./blastn', '-db', DB_16S, '-query', TEMP_FILENAME1, '-evalue', '0.01', '-max_target_seqs', str(BLAST_RESULTS+1), '-num_threads', str(NUM_THREADS), '-outfmt', '6 qseqid sseqid evalue bitscore', '-out', TEMP_FILENAME2], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.run(['blastn', '-db', DB_16S, '-query', TEMP_FILENAME1, '-evalue', '0.01', '-max_target_seqs', str(BLAST_RESULTS+1), '-num_threads', str(NUM_THREADS), '-outfmt', '6 qseqid sseqid evalue bitscore', '-out', TEMP_FILENAME2], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         # Read in BLAST results
         replicates = {}
@@ -310,14 +310,14 @@ def create_blast_filter_for_relatives(GENOME_DIR, target_ID_to_genome):
                         for t in targets: out_file.write(t + '\n')
 
         # Format Blast filter file
-        p = subprocess.run(['./blastdb_aliastool', '-seqid_file_in', FILTER_FILE], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.run(['blastdb_aliastool', '-seqid_file_in', FILTER_FILE], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
 # Helper function for computing target homologs
 # PERFORM BLAST WITHOUT USING MULTIPLE PROCESSORS
 def blast_targets_against_database_SINGLE_PROCESS(protein_file):
         BLAST_OUTPUT_FILE = str(time.time()) + '.blast'
-        p = subprocess.run(['./blastp', '-db', DB_FAA, '-query', protein_file, '-outfmt', '6 qseqid sseqid evalue bitscore', '-out', BLAST_OUTPUT_FILE, '-evalue', '0.01', '-max_target_seqs', '100', '-num_threads', str(NUM_THREADS), '-seqidlist', FILTER_FILE + '.bsl'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.run(['blastp', '-db', DB_FAA, '-query', protein_file, '-outfmt', '6 qseqid sseqid evalue bitscore', '-out', BLAST_OUTPUT_FILE, '-evalue', '0.01', '-max_target_seqs', '100', '-num_threads', str(NUM_THREADS), '-seqidlist', FILTER_FILE + '.bsl'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if (os.path.exists(protein_file)): os.remove(protein_file)
         if (os.path.exists(FILTER_FILE)): os.remove(FILTER_FILE)
         if (os.path.exists(FILTER_FILE + '.bsl')): os.remove(FILTER_FILE + '.bsl')
@@ -331,7 +331,7 @@ def run_blast(target_subset):
                 for target in target_subset:
                         GENOME_DIR, accession, protein_seq = target
                         out_file.write('>' + accession + '\n' + protein_seq + '\n')
-        p = subprocess.run(['./blastp', '-db', DB_FAA, '-query', accession_file, '-outfmt', '6 qseqid sseqid evalue bitscore', '-out', GENOME_DIR + accession + '.blast.xyz', '-evalue', '0.01', '-max_target_seqs', '100', '-num_threads', str(NUM_THREADS), '-seqidlist', FILTER_FILE + '.bsl'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.run(['blastp', '-db', DB_FAA, '-query', accession_file, '-outfmt', '6 qseqid sseqid evalue bitscore', '-out', GENOME_DIR + accession + '.blast.xyz', '-evalue', '0.01', '-max_target_seqs', '100', '-num_threads', str(NUM_THREADS), '-seqidlist', FILTER_FILE + '.bsl'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if (os.path.exists(accession_file)): os.remove(accession_file)
 
 
@@ -482,7 +482,7 @@ def run_RNAplfold(target):
         accession, mRNA_name, mRNA_sequence, count = target
         with open(GENOME_DIR + RNAPLFOLD_DIR + accession + '____' + mRNA_name + '.fa', 'w') as out_file:
                 out_file.write('>' + accession + '____' + mRNA_name + '\n' + mRNA_sequence + '\n')
-        p = subprocess.run(['./RNAplfold', '-u', '40', '-O', '--plex_output', '--auto-id', '--id-prefix', 'TR' + count], input=mRNA_sequence.encode(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.run(['RNAplfold', '-u', '40', '-O', '--plex_output', '--auto-id', '--id-prefix', 'TR' + count], input=mRNA_sequence.encode(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if (p.returncode != 0) or (len(p.stderr.decode()) > 0):
                 error('Problem executing RNAplfold:\t' + str(p.stderr.decode()) + '\n')
         renameAndRemoveOutputFiles('TR' + count + '_0001', accession + '____' + mRNA_name)
@@ -501,7 +501,7 @@ def RNAplfold_MULTI_PROCESS(targets):
 # Helper function for computing target accessibility
 # CREATE BINARY VERSIONS OF ACCESSIBILITY FILES USING RNAplex
 def create_binary_files():
-        p = subprocess.run(['./RNAplex', '-a', GENOME_DIR + RNAPLFOLD_DIR, '-k'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.run(['RNAplex', '-a', GENOME_DIR + RNAPLFOLD_DIR, '-k'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         filelist = os.listdir(GENOME_DIR + RNAPLFOLD_DIR)
         for f in filelist:
                 if (f.endswith('_openen')): os.remove(GENOME_DIR + RNAPLFOLD_DIR + f)
