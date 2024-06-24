@@ -162,5 +162,5 @@ cython_debug/
 #.idea/
 
 tmp
-Genomes/GCF_000005845.2
-Genomes/GCF_000006765.1
+Genomes/GCF_000005845.2/**
+Genomes/GCF_000006765.1/**
