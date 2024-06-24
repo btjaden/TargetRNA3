@@ -164,3 +164,4 @@ cython_debug/
 tmp
 Genomes/GCF_000005845.2/**
 Genomes/GCF_000006765.1/**
+DataFiles
